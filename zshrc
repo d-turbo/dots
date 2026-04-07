@@ -9,8 +9,8 @@ export VISUAL=nvim
 alias ll='ls -lah'
 alias lll='ls -lah | less'
 alias grep='grep --color=auto'
-alias m="micro"
-alias hx="helix"
+# alias m="micro"
+# alias hx="helix"
 alias v="nvim"
 alias qwerty="setxkbmap us -variant colemak"
 
