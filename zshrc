@@ -15,7 +15,9 @@ alias v="nvim"
 alias qwerty="setxkbmap us -variant colemak"
 
 ed() {
-	command ed -p $'\n\e[1;32m'"$1"$'\e[0m'"> "
+	local file="$1"
+	shift
+	command ed -p $'\n\e[1;32m'"$file"$'\e[0m> ' "$file" "$@"
 }
 
 set -o vi
