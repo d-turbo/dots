@@ -1,0 +1,38 @@
+#!/bin/sh
+
+SYS_RESOURCES="/etc/X11/xinit/.Xresources"
+SYS_MODMAP="/etc/X11/xinit/.Xmodmap"
+USER_RESOURCES="$HOME/.config/X11/Xresources"
+USER_MODMAP="$HOME/.config/X11/Xmodmap"
+
+XINIT_DIR="/etc/X11/xinit/xinitrc.d"
+
+WALLPAPER="$HOME/Pictures/wallpaper/linus-belanger-dp1_YTnEG2M-unsplash.jpg"
+
+if [ -f "$SYS_RESOURCES" ]; then xrdb -merge "$SYS_RESOURCES"; fi
+if [ -f "$SYS_MODMAP" ]; then xmodmap "$SYS_MODMAP"; fi
+if [ -f "$USER_RESOURCES" ]; then xrdb -merge "$USER_RESOURCES"; fi
+if [ -f "$USER_MODMAP" ]; then xmodmap "$USER_MODMAP"; fi
+
+
+if [ -d "$XINIT_DIR" ]; then
+    for script in "$XINIT_DIR"/?*.sh; do
+        [ -x "$script" ] && . "$script"
+    done
+    unset script
+fi
+
+xrandr --output DisplayPort-3 --mode 1920x1080 --rate 180
+xrandr --output DisplayPort-4 --mode 1920x1080 --rate 180
+
+setxkbmap us -variant colemak
+
+xwallpaper --zoom "$WALLPAPER" &
+
+setxkbmap us -variant colemak
+
+slstatus &
+dunst &
+"$HOME/Scripts/bash/rest-remind.sh" &
+
+exec dwm

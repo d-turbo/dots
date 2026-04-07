@@ -1,0 +1,80 @@
+! Night owl palette (https://github.com/sdras/night-owl-vscode-theme)
+#define BLACK		#011627
+#define BLACK_D		#575656
+#define RED			#ef5350
+#define RED_D		#ef5350
+#define GREEN		#22da6e
+#define GREEN_D		#22da6e
+#define YELLOW		#addb67
+#define YELLOW_D	#ffeb95
+#define BLUE		#82aaff
+#define BLUE_D		#82aaff
+#define MAGENTA		#c792ea
+#define MAGENTA_D	#c792ea	
+#define CYAN		#21c7a8
+#define CYAN_D		#7fdbca
+#define WHITE		#ffffff
+#define WHITE_D		#ffffff
+
+#define FG			#d6deeb
+#define BG			#011627
+
+#define FONT		Ioskeley Mono
+#define FONT_SIZE	12
+
+Xcursor.theme: Bibata-Modern-Ice
+
+*.foreground: FG
+*.background: BG
+*.color0: BLACK
+*.color1: RED
+*.color2: GREEN
+*.color3: YELLOW
+*.color4: BLUE
+*.color5: MAGENTA
+*.color6: CYAN
+*.color7: WHITE
+*.color8: BLACK_D
+*.color9: RED_D
+*.color10: GREEN_D
+*.color11: YELLOW_D
+*.color12: BLUE_D
+*.color13: MAGENTA_D
+*.color14: CYAN_D
+*.color15: WHITE_D
+
+! st
+st.font: FONT:size=FONT_SIZE:antialias=true:autohint=true
+st.cursorColor: WHITE_D
+
+! dwm, dmenu
+dwm.dmenufont: FONT:size=FONT_SIZE
+dwm.font: FONT:size=FONT_SIZE
+dmenu.font: FONT:size=FONT_SIZE
+*.normbgcolor: BG
+*.normbordercolor: BLUE
+*.normfgcolor: FG
+*.selbgcolor: GREEN
+*.selbordercolor: WHITE
+*.selfgcolor: BG
+*.borderpx: 1
+*.snap: 16
+
+! berry
+berry.font: FONT
+
+! nsxiv
+Nsxiv.bar.font: FONT-FONT_SIZE
+Nsxiv.window.background: BLACK
+Nsxiv.window.foreground: WHITE
+Nsxiv.bar.background: CYAN_D
+Nsxiv.bar.foreground: BLACK
+
+! xterm
+xterm*faceName: FONT
+xterm*faceSize: FONT_SIZE
+XTerm.termName: xterm-256color
+XTerm.vt100.locale: false
+XTerm.vt100.utf8: true
+XTerm.vt100.metaSendsEscape: true
+
