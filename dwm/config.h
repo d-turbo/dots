@@ -107,9 +107,8 @@ static const Key keys[] = {
   { 0,                            XK_Print,  spawn,          {.v = scrotcmd } },
   { MODKEY|ShiftMask,             XK_b,      spawn,          {.v = browsercmd } },
   { MODKEY,                       XK_v,      spawn,          SHCMD("mpv -ytdl-format=\"bv[height<=?1080]+wa\" $(xclip -out)") },
-  { Mod1Mask,                     XK_F4,     spawn,          {.v = powercmd } },
-  { Mod1Mask,                     XK_F4,     spawn,          SHCMD(UTILS("poweroff") "off") },
-  { MODKEY,                       XK_s,      spawn,          SHCMD(UTILS("poweroff") "sleep") },
+  { Mod1Mask,                     XK_F4,     spawn,          SHCMD(UTILS("poweroff") " off") },
+  { MODKEY,                       XK_s,      spawn,          SHCMD(UTILS("poweroff") " sleep") },
 
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 

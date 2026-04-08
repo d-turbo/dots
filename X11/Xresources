@@ -78,3 +78,8 @@ XTerm.vt100.locale: false
 XTerm.vt100.utf8: true
 XTerm.vt100.metaSendsEscape: true
 
+! zathura
+zathura.font: FONT normal FONT_SIZE
+zathura.inputbar-bg: BG
+zathura.statusbar-bg: BG
+zathura.default-bg: BG
