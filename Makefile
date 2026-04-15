@@ -3,9 +3,9 @@ SRC := $(LOCAL)/src
 TMP := /tmp/dots
 CONFIG := $(HOME)/.config
 
-.PHONY: all config compiled zsh x11 nvim zathura suckless resume
+.PHONY: all config compiled zsh x11 nvim suckless resume
 
-all: zsh config x11 nvim zathura
+all: zsh config x11 nvim
 
 config:
 	mkdir -p $(CONFIG)

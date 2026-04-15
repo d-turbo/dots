@@ -9,6 +9,7 @@ vim.o.clipboard = 'unnamedplus'
 vim.o.completeopt = 'menu,fuzzy,menuone,noselect'
 vim.o.mouse = 'a'
 vim.o.fileencoding = 'utf-8'
+vim.o.autochdir = true
 
 vim.o.tabstop = 4
 vim.o.softtabstop = 4
@@ -41,7 +42,7 @@ vim.o.shortmess = "filnxtToOF"
 
 vim.o.lazyredraw = true
 vim.o.list = true
-vim.o.listchars = "tab:>-,trail:~,extends:>,precedes:<,nbsp:."
+vim.o.listchars = "tab:│ ,trail:~,extends:>,precedes:<,nbsp:."
 
 require('hydras.window')
 

@@ -1,26 +1,27 @@
 ! Night owl palette (https://github.com/sdras/night-owl-vscode-theme)
-#define BLACK		#011627
-#define BLACK_D		#575656
-#define RED			#ef5350
-#define RED_D		#ef5350
-#define GREEN		#22da6e
-#define GREEN_D		#22da6e
-#define YELLOW		#addb67
-#define YELLOW_D	#ffeb95
-#define BLUE		#82aaff
-#define BLUE_D		#82aaff
-#define MAGENTA		#c792ea
-#define MAGENTA_D	#c792ea	
-#define CYAN		#21c7a8
-#define CYAN_D		#7fdbca
-#define WHITE		#ffffff
-#define WHITE_D		#ffffff
+#define BLACK       #011627
+#define BLACK_D     #575656
+#define RED         #ef5350
+#define RED_D       #ef5350
+#define GREEN       #22da6e
+#define GREEN_D     #22da6e
+#define YELLOW      #addb67
+#define YELLOW_D    #ffeb95
+#define BLUE        #82aaff
+#define BLUE_D      #82aaff
+#define MAGENTA     #c792ea
+#define MAGENTA_D   #c792ea
+#define CYAN        #21c7a8
+#define CYAN_D      #7fdbca
+#define WHITE       #ffffff
+#define WHITE_D     #ffffff
 
-#define FG			#d6deeb
-#define BG			#011627
+#define FG          #d6deeb
+#define BG          #011627
 
-#define FONT		Ioskeley Mono
-#define FONT_SIZE	12
+#define FONT              Ioskeley Mono
+#define FONT_SIZE         12
+#define FONT_BIGGER_SIZE  25
 
 Xcursor.theme: Bibata-Modern-Ice
 
@@ -45,6 +46,7 @@ Xcursor.theme: Bibata-Modern-Ice
 
 ! st
 st.font: FONT:size=FONT_SIZE:antialias=true:autohint=true
+st.biggerFont: FONT:size=FONT_BIGGER_SIZE:antialias=true:autohint=true
 st.cursorColor: WHITE_D
 
 ! dwm, dmenu

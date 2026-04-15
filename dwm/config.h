@@ -72,7 +72,6 @@ static const char *volupcmd[] = { "wpctl", "set-volume", "@DEFAULT_SINK@", "0.10
 static const char *scrotcmd[] = { "scrot", "-s", "/home/dturbo/Pictures/screenshot/%Y-%m-%dT%H:%M:%S.png", NULL };
 static const char *scrotfullcmd[] = { "scrot", "/home/dturbo/Pictures/screenshot/%Y-%m-%dT%H:%M:%S.png", NULL };
 static const char *browsercmd[] = { "librewolf", NULL };
-static const char *powercmd[] = { "poweroff", NULL };
 
 /*
  * Xresources preferences to load at startup
@@ -86,13 +85,13 @@ ResourcePref resources[] = {
 		{ "selbgcolor",         STRING,  &selbgcolor },
 		{ "selbordercolor",     STRING,  &selbordercolor },
 		{ "selfgcolor",         STRING,  &selfgcolor },
-		{ "borderpx",          	INTEGER, &borderpx },
-		{ "snap",          		INTEGER, &snap },
-		{ "showbar",          	INTEGER, &showbar },
-		{ "topbar",          	INTEGER, &topbar },
-		{ "nmaster",          	INTEGER, &nmaster },
-		{ "resizehints",       	INTEGER, &resizehints },
-		{ "mfact",      	 	FLOAT,   &mfact },
+		{ "borderpx",           INTEGER, &borderpx },
+		{ "snap",               INTEGER, &snap },
+		{ "showbar",            INTEGER, &showbar },
+		{ "topbar",             INTEGER, &topbar },
+		{ "nmaster",            INTEGER, &nmaster },
+		{ "resizehints",        INTEGER, &resizehints },
+		{ "mfact",              FLOAT,   &mfact },
 };
 
 
@@ -100,16 +99,20 @@ static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_r,      spawn,          {.v = dmenucmd } },
 	{ MODKEY,                       XK_z,      spawn,          {.v = termcmd } },
+	{ MODKEY|ShiftMask,             XK_z,      spawn,          SHCMD("st -f \"$(xrdb -get st.biggerFont)\" -T st-bigger") },
+	
+	{ 0,             XF86XK_AudioLowerVolume,  spawn,          {.v = voldowncmd } },
+	{ 0,             XF86XK_AudioRaiseVolume,  spawn,          {.v = volupcmd } },
 
-  { 0,             XF86XK_AudioLowerVolume,  spawn,          {.v = voldowncmd } },
-  { 0,             XF86XK_AudioRaiseVolume,  spawn,          {.v = volupcmd } },
-  { ShiftMask,                    XK_Print,  spawn,          {.v = scrotfullcmd } },
-  { 0,                            XK_Print,  spawn,          {.v = scrotcmd } },
-  { MODKEY|ShiftMask,             XK_b,      spawn,          {.v = browsercmd } },
-  { MODKEY,                       XK_v,      spawn,          SHCMD("mpv -ytdl-format=\"bv[height<=?1080]+wa\" $(xclip -out)") },
-  { Mod1Mask,                     XK_F4,     spawn,          SHCMD(UTILS("poweroff") " off") },
-  { MODKEY,                       XK_s,      spawn,          SHCMD(UTILS("poweroff") " sleep") },
-
+	{ ShiftMask,                    XK_Print,  spawn,          {.v = scrotfullcmd } },
+	{ 0,                            XK_Print,  spawn,          {.v = scrotcmd } },
+	
+	{ MODKEY|ShiftMask,             XK_b,      spawn,          {.v = browsercmd } },
+	{ MODKEY,                       XK_v,      spawn,          SHCMD(UTILS("openlink") " $(xclip -out)") },
+	
+	{ Mod1Mask,                     XK_F4,     spawn,          SHCMD(UTILS("poweroff") " off") },
+	{ MODKEY,                       XK_s,      spawn,          SHCMD(UTILS("poweroff") " sleep") },
+	
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 
 	{ MODKEY,                       XK_e,      focusstack,     {.i = +1 } },

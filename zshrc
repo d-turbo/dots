@@ -1,13 +1,22 @@
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_BIN_HOME="$HOME/.local/bin"
+
+export PATH="$PATH:$XDG_BIN_HOME"
+
 autoload -Uz compinit
-compinit
+compinit -d "$XDG_CACHE_HOME/zsh/.zcompdump"
 zstyle ':completion:*' menu select
-zstyle ':completion::complete:*' gain-privileges 1
+zstyle ':completion::complete:*' gain-privileges true
 
 export EDITOR=nvim
 export VISUAL=nvim
 
 alias ll='ls -lah'
 alias lll='ls -lah | less'
+alias less='less -Nsc'
 alias grep='grep --color=auto'
 # alias m="micro"
 # alias hx="helix"
@@ -18,6 +27,10 @@ ed() {
 	local file="$1"
 	shift
 	command ed -p $'\n\e[1;32m'"$file"$'\e[0m> ' "$file" "$@"
+}
+
+webdump() {
+	curl -s "$1" | command webdump -8 -a -i -r -l -b "$1" | less -R
 }
 
 set -o vi
@@ -43,5 +56,6 @@ source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 export XINITRC="$HOME/.config/X11/xinitrc"
 export QT_QPA_PLATFORMTHEME="qt5ct"
-export PATH="$PATH:$HOME/.local/bin"
-export PATH="$PATH:$HOME/.dotnet/tools"
+
+# source /usr/share/nvm/init-nvm.sh
+# export PATH="$PATH:$HOME/.dotnet/tools"
