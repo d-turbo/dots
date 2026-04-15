@@ -29,7 +29,7 @@ nvim: config
 zathura: config x11
 	$(PWD)/zathura/zathurarc.template > $(CONFIG)/zathura/zathurarc
 
-suckless: compiled
+compile: compiled
 	@if [ -z "$(PROG)" ]; then \
 		echo "Usage: make suckless PROG=<tool>"; \
 		exit 1; \
