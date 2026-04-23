@@ -29,8 +29,8 @@ ed() {
 	command ed -p $'\n\e[1;32m'"$file"$'\e[0m> ' "$file" "$@"
 }
 
-webdump() {
-	curl -s "$1" | command webdump -8 -a -i -r -l -b "$1" | less -R
+wdump() {
+	curl -s "$1" | webdump -8 -a -i -r -l -b "$1" | less -R
 }
 
 set -o vi
@@ -56,6 +56,7 @@ source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 export XINITRC="$HOME/.config/X11/xinitrc"
 export QT_QPA_PLATFORMTHEME="qt5ct"
+export OLLAMA_EDITOR=nvim
 
 # source /usr/share/nvm/init-nvm.sh
 # export PATH="$PATH:$HOME/.dotnet/tools"

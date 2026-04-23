@@ -39,7 +39,7 @@ compile: compiled
 	@if [ -d "$(SRC)/$(PROG)" ]; then \
 		cd "$(SRC)/$(PROG)" && git pull --ff-only || echo "Using local copy"; \
 	else \
-		if ! git clone "https://git.suckless.org/$(PROG)" "$(SRC)/$(PROG)"; then \
+		if ! git clone --depth 1 --single-branch "https://git.suckless.org/$(PROG)" "$(SRC)/$(PROG)"; then \
 			echo "No $(PROG)..."; \
 			exit 1; \
 		fi \

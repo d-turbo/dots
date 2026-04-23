@@ -5,28 +5,44 @@ Hydra({
 
 	mode = { 'n', 't' },
 
-	body = '<leader>w',
+	body = '<leader>z',
 
 	heads = {
 		{ 'n', '<C-w>h', { desc = 'Move left', mode = 'n', exit = false } },
 		{ 'e', '<C-w>j', { desc = 'Move down', mode = 'n', exit = false } },
 		{ 'i', '<C-w>k', { desc = 'Move up', mode = 'n', exit = false } },
 		{ 'o', '<C-w>l', { desc = 'Move right', mode = 'n', exit = false } },
+		{ '<left>', '<C-w>h', { desc = 'Move left', mode = 'n', exit = false } },
+		{ '<down>', '<C-w>j', { desc = 'Move down', mode = 'n', exit = false } },
+		{ '<up>', '<C-w>k', { desc = 'Move up', mode = 'n', exit = false } },
+		{ '<right>', '<C-w>l', { desc = 'Move right', mode = 'n', exit = false } },
 
 		{ 'n', [[<C-\><C-n><C-w>h]], { desc = 'Terminal left', mode = 't', exit = false } },
 		{ 'e', [[<C-\><C-n><C-w>j]], { desc = 'Terminal down', mode = 't', exit = false } },
 		{ 'i', [[<C-\><C-n><C-w>k]], { desc = 'Terminal up', mode = 't', exit = false } },
 		{ 'o', [[<C-\><C-n><C-w>l]], { desc = 'Terminal right', mode = 't', exit = false } },
+		{ '<left>', [[<C-\><C-n><C-w>h]], { desc = 'Terminal left', mode = 't', exit = false } },
+		{ '<down>', [[<C-\><C-n><C-w>j]], { desc = 'Terminal down', mode = 't', exit = false } },
+		{ '<up>', [[<C-\><C-n><C-w>k]], { desc = 'Terminal up', mode = 't', exit = false } },
+		{ '<right>', [[<C-\><C-n><C-w>l]], { desc = 'Terminal right', mode = 't', exit = false } },
 
         { 'N', ':vertical resize -2<CR>', { desc = 'Resize split to the left', mode = 'n', exit = false } },
         { 'E', ':resize +2<CR>', { desc = 'Resize split downwards', mode = 'n', exit = false } },
         { 'I', ':resize -2<CR>', { desc = 'Resize split upwards', mode = 'n', exit = false } },
         { 'O', ':vertical resize +2<CR>', { desc = 'Resize split to the right', mode = 'n', exit = false } },
+		{ '<C- left>', ':vertical resize -2<CR>', { desc = 'Resize split to the left', mode = 'n', exit = false } },
+        { '<C- down>', ':resize +2<CR>', { desc = 'Resize split downwards', mode = 'n', exit = false } },
+        { '<C- up>', ':resize -2<CR>', { desc = 'Resize split upwards', mode = 'n', exit = false } },
+        { '<C- right>', ':vertical resize +2<CR>', { desc = 'Resize split to the right', mode = 'n', exit = false } },
 
         { 'N', [[<C-\><C-n>:vertical resize -2<CR>]], { desc = 'Resize terminal to the left', mode = 't', exit = false } },
         { 'E', [[<C-\><C-n>:resize +2<CR>]], { desc = 'Resize terminal downwards', mode = 't', exit = false } },
         { 'I', [[<C-\><C-n>:resize -2<CR>]], { desc = 'Resize terminal upwards', mode = 't', exit = false } },
         { 'O', [[<C-\><C-n>:vertical resize +2<CR>]], { desc = 'Resize terminal to the right', mode = 't', exit = false } },
+        { '<C- left>', [[<C-\><C-n>:vertical resize -2<CR>]], { desc = 'Resize terminal to the left', mode = 't', exit = false } },
+        { '<C- down>', [[<C-\><C-n>:resize +2<CR>]], { desc = 'Resize terminal downwards', mode = 't', exit = false } },
+        { '<C- up>', [[<C-\><C-n>:resize -2<CR>]], { desc = 'Resize terminal upwards', mode = 't', exit = false } },
+        { '<C- right>', [[<C-\><C-n>:vertical resize +2<CR>]], { desc = 'Resize terminal to the right', mode = 't', exit = false } },
 
         { 'S', ':vsplit<CR>', { desc = 'Duplicate buffer as a split vertically', exit = true } },
         { 's', ':split<CR>', { desc = 'Duplicate buffer as a split horizontally', exit = true } },
