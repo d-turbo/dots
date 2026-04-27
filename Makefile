@@ -9,6 +9,7 @@ all: zsh config x11 nvim
 
 config:
 	mkdir -p $(CONFIG)
+	echo "Created a user config directory."
 
 compiled:
 	mkdir -p $(SRC)
@@ -19,7 +20,7 @@ zsh:
 
 x11: config
 	rm -rf $(CONFIG)/X11
-	ln -s $(PWD)/X11 $(CONFIG)/X11
+	2ln -s $(PWD)/X11 $(CONFIG)/X11
 	[ -n "$$DISPLAY" ] && xdpyinfo >/dev/null 2>&1 && xrdb -merge $(CONFIG)/X11/Xresources
 
 nvim: config
@@ -46,9 +47,9 @@ compile: compiled
 	fi
 
 	@echo -e "\nBuilding $(PROG)..."
-	rm -rf "$(TMP)/$(PROG)"
-	cp -a "$(SRC)/$(PROG)" "$(TMP)/$(PROG)"
-	cp -a "$(PWD)/$(PROG)/." "$(TMP)/$(PROG)/"
+	@rm -rf "$(TMP)/$(PROG)"
+	@cp -a "$(SRC)/$(PROG)" "$(TMP)/$(PROG)"
+	@cp -a "$(PWD)/$(PROG)/." "$(TMP)/$(PROG)/"
 
 	@echo -e "\nPatching $(PROG)..."
 	@cd $(TMP)/$(PROG) && \
@@ -65,7 +66,7 @@ compile: compiled
 	@echo -e "\nCompiling $(PROG)..."
 	@cd $(TMP)/$(PROG)/ && make PREFIX=$(LOCAL) install
 	@echo -e "\nCleanup for $(PROG)..."
-	rm -rf $(TMP)/$(PROG)
+	@rm -rf $(TMP)/$(PROG)
 
 resume:
 	@if [ -z "$(PROG)" ]; then \
@@ -77,7 +78,7 @@ resume:
 		exit 1; \
 	fi
 
-	cd $(TMP)/$(PROG) && \
+	@cd $(TMP)/$(PROG) && \
 	if [ -d "$(TMP)/$(PROG)/patches" ]; then \
 		echo -e "\nResume patching $(PROG)..."; \
 		for p in $(TMP)/$(PROG)/patches/*.diff; do \
@@ -92,4 +93,4 @@ resume:
 	@echo -e "\nCompiling $(PROG)..."
 	@cd $(TMP)/$(PROG)/ && make PREFIX=$(LOCAL) install
 	@echo -e "\nCleanup for $(PROG)..."
-	rm -rf $(TMP)/$(PROG)
+	@rm -rf $(TMP)/$(PROG)
