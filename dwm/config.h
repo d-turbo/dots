@@ -66,7 +66,7 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbordercolor, "-sf", selfgcolor, NULL };
-static const char *termcmd[]  = { "st", "-e", "$EDITOR", NULL };
+static const char *termcmd[]  = { "st", NULL };
 
 static const char *voldowncmd[] = { "wpctl", "set-volume", "@DEFAULT_SINK@", "0.10-", NULL };
 static const char *volupcmd[] = { "wpctl", "set-volume", "@DEFAULT_SINK@", "0.10+", NULL };
@@ -99,8 +99,8 @@ ResourcePref resources[] = {
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_r,      spawn,          {.v = dmenucmd } },
-	{ MODKEY,                       XK_z,      spawn,          {.v = termcmd } },
-	{ MODKEY|ShiftMask,             XK_z,      spawn,          SHCMD("st -f \"$(xrdb -get st.biggerFont)\" -T st-bigger") },
+	{ MODKEY|ShiftMask,             XK_z,      spawn,          {.v = termcmd } },
+	{ MODKEY,                       XK_z,      spawn,          SHCMD("st -e $EDITOR") },
 	
 	{ 0,             XF86XK_AudioLowerVolume,  spawn,          {.v = voldowncmd } },
 	{ 0,             XF86XK_AudioRaiseVolume,  spawn,          {.v = volupcmd } },

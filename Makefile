@@ -20,7 +20,7 @@ zsh:
 
 x11: config
 	rm -rf $(CONFIG)/X11
-	2ln -s $(PWD)/X11 $(CONFIG)/X11
+	ln -s $(PWD)/X11 $(CONFIG)/X11
 	[ -n "$$DISPLAY" ] && xdpyinfo >/dev/null 2>&1 && xrdb -merge $(CONFIG)/X11/Xresources
 
 nvim: config

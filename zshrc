@@ -10,6 +10,8 @@ autoload -Uz compinit
 compinit -d "$XDG_CACHE_HOME/zsh/.zcompdump"
 zstyle ':completion:*' menu select
 zstyle ':completion::complete:*' gain-privileges true
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/zcompcache"
 
 export EDITOR=nvim
 export VISUAL=nvim
@@ -51,8 +53,8 @@ PROMPT="$ "
 # RPROMPT="%T"
 # ZLE_RPROMPT_INDENT=0
 
-source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
 
 export XINITRC="$HOME/.config/X11/xinitrc"
 export QT_QPA_PLATFORMTHEME="qt5ct"

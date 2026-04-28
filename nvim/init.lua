@@ -3,9 +3,12 @@ local globals = {
 	maplocalleader = '\\',
 
 	netrw_banner = 0,
-	netrw_liststyle = 3,
+	netrw_liststyle = 1,
 	netrw_browse_split = 0,
-	netrw_altv = 1
+	netrw_altv = 1,
+	netrw_sizestyle = 'h',
+	netrw_winsize = 25,
+	netrw_fastbrowse = 1,
 }
 
 local options = {
@@ -17,8 +20,9 @@ local options = {
 	wrap = true,
 	wrapmargin = 0,
 	breakindent = true,
-	scrolloff = 8,
-	sidescrolloff = 8,
+	scrollback = 300,
+	scrolloff = 999,
+	sidescrolloff = 16,
 	showmode = true,
 	smoothscroll = true,
 	lazyredraw = true,
@@ -46,7 +50,7 @@ local options = {
 	smartcase = true,
 	inccommand = 'split',
 
-	completeopt = {'menu', 'menuone', 'noselect', 'fuzzy' },
+	completeopt = {'menu', 'menuone', 'noselect'},
 	
 	cedit = '<C-F>',
 
@@ -69,6 +73,41 @@ local options = {
 
 }
 
+local keymaps = {
+	t = {
+		{ "<C-\\>", [[<C-\><C-n>]] },
+	},
+	
+	n = {
+		{ "<leader>vd", ":vsplit<CR>" },
+		{ "<leader>vn", ":vnew<CR>" },
+		{ "<leader>vx", ":Vexplore<CR>" },
+		{ "<leader>vt", ":vsplit | terminal<CR>" },
+
+		{ "<leader>hd", ":split<CR>" },
+		{ "<leader>hn", ":new<CR>" },
+		{ "<leader>hx", ":Explore<CR>" },
+		{ "<leader>ht", ":split | terminal<CR>" },
+
+		{ "<leader>td", ":tab split<CR>" },
+		{ "<leader>tn", ":tabnew<CR>" },
+		{ "<leader>tx", ":Texplore<CR>" },
+		{ "<leader>tt", ":tab split | terminal<CR>" },
+
+		{ "<leader>n", ":enew<CR>" },
+		{ "<leader>N", ":enew!<CR>" },
+		{ "<leader>x", ":Explore<CR>" },
+		{ "<leader>X", ":Explore!<CR>" },
+		{ "<leader>t", ":terminal<CR>" },
+		{ "<leader>T", ":terminal!<CR>" },
+
+		{ "<leader>bc", ":bdelete<CR>" },
+		{ "<leader>tc", ":tabclose<CR>" },
+
+		{ "<leader>/", ":nohlsearch<CR>" },
+	}
+}
+
 for k, v in pairs(options) do
 	vim.opt[k] = v
 end
@@ -77,6 +116,11 @@ for k, v in pairs(globals) do
 	vim.g[k] = v
 end
 
+for mode, maps in pairs(keymaps) do
+	for _, m in ipairs(maps) do
+		vim.keymap.set(mode, m[1], m[2], { noremap = true, silent =true })
+	end
+end
+
 require('lazy.config')
 require('hydras.window')
-
