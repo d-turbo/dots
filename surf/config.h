@@ -1,11 +1,22 @@
 /* modifier 0 means no modifier */
+
+#define PROG_NAME          "surf"
+
+#define PROMPT_GO          "Saan pupunta:"
+#define PROMPT_FIND        "Ano\'ng hahanapin:"
+#define OUTPUT_DIR         "$HOME/Downloads/surf/"
+
+#define CONFIG_DIR    "~/.config/surf"
+#define CACHE_DIR     "~/.cache/surf"
+
 static int surfuseragent    = 1;  /* Append Surf version to default WebKit user agent */
 static char *fulluseragent  = ""; /* Or override the whole user agent string */
-static char *scriptfile     = "~/.surf/script.js";
-static char *styledir       = "~/.surf/styles/";
-static char *certdir        = "~/.surf/certificates/";
-static char *cachedir       = "~/.surf/cache/";
-static char *cookiefile     = "~/.surf/cookies.txt";
+static char *scriptfile     = CONFIG_DIR "/script.js";
+static char *styledir       = CONFIG_DIR "/styles/";
+static char *bookmarkfile   = CONFIG_DIR "/bookmarks.tsv";
+static char *certdir        = CACHE_DIR "/certificates/";
+static char *cachedir       = CACHE_DIR "/cache/";
+static char *cookiefile     = CACHE_DIR "/cookies.txt";
 
 /* Webkit default features */
 /* Highest priority value will be used.
@@ -35,7 +46,7 @@ static Parameter defconfig[ParameterLast] = {
 	[LoadImages]          =       { { .i = 1 },     },
 	[MediaManualPlay]     =       { { .i = 1 },     },
 	[PDFJSviewer]         =       { { .i = 1 },     },
-	[PreferredLanguages]  =       { { .v = (char *[]){ NULL } }, },
+	[PreferredLanguages]  =       { { .v = ((char *[]){ "en-US", "en", NULL }) }, },
 	[RunInFullscreen]     =       { { .i = 0 },     },
 	[ScrollBars]          =       { { .i = 0 },     },
 	[ShowIndicators]      =       { { .i = 1 },     },
@@ -61,50 +72,67 @@ static int winsize[] = { 800, 600 };
 static WebKitFindOptions findopts = WEBKIT_FIND_OPTIONS_CASE_INSENSITIVE |
                                     WEBKIT_FIND_OPTIONS_WRAP_AROUND;
 
-#define PROMPT_GO   "Saan pupunta:"
-#define PROMPT_FIND "Ano'ng hahanapin:"
-#define OUTPUT_DIR "$HOME/Downloads/surf/"
-#define DOWNLOAD_TERM_NAME "surf"
-
-#define XPROP_SET(winid, setprop, prop) \
-	"xprop -id " winid " -f " setprop " 8u -set " setprop " \"" prop "\"" 
+#define GETPROP_HELPER(r) \
+		 "xprop -id $1 " r " | " \
+		 "sed -e 's/^" r "(UTF8_STRING) = \"\\(.*\\)\"/\\1/' " \
+		 "      -e 's/\\\\\\(.\\)/\\1/g'"
 
 /* SETPROP(readprop, setprop, prompt)*/
-#define SETPROP(r, s, p) { \
+#define SETPROP(r, s, prompt) { \
         .v = (const char *[]){ "/bin/sh", "-c", \
-             "prop=\"$(printf '%b' \"$(xprop -id $1 "r" " \
-             "| sed -e 's/^"r"(UTF8_STRING) = \"\\(.*\\)\"/\\1/' " \
-             "      -e 's/\\\\\\(.\\)/\\1/g')\" " \
-             "| dmenu -p '"p"' -w $1)\" " \
-             "&& xprop -id $1 -f " s " 8u -set " s " \"$prop\"", \
+			 "prop=$(" GETPROP_HELPER(r) ") && " \
+             "prop=$(printf '%b' \"$prop\" | dmenu -p \"" prompt "\" -w \"$1\") && " \
+             "xprop -id $1 -f " s " 8u -set " s " \"$prop\"", \
              "surf-setprop", winid, NULL \
         } \
 }
 
-/* DOWNLOAD(URI, referer) */
-#define DOWNLOAD(u, r) { \
-        .v = (const char *[]){ "st", "-T", DOWNLOAD_TERM_NAME, "-e", "/bin/sh", "-c",\
-             "curl -g -L -J -O --create-dirs --output-dir \"" OUTPUT_DIR "\" -A \"$1\" -b \"$2\" -c \"$2\"" \
-             " -e \"$3\" \"$4\"; read", \
-             "surf-download", useragent, cookiefile, r, u, NULL \
-        } \
+#define GETPROP(r, cmd, proc) { \
+		.v = (const char *[]) { "/bin/sh", "-c", \
+			"url=$(" GETPROP_HELPER(r) ") && if [ -n \"$url\" ]; then " cmd "; "\
+			" else " NOTIFY("critical", "Blank URL!") "; fi", \
+			proc, winid, NULL \
+		} \
 }
 
-/* PLUMB(URI) */
-/* This called when some URI which does not begin with "about:",
- * "http://" or "https://" should be opened.
- */
-#define PLUMB(u) {\
+#define NOTIFY(priority, msg) \
+		"dunstify -r 7873 -u " priority " -t 5000 \"" PROG_NAME "\" \"" msg "\""
+
+#define YANK_URL_TO_CLIPBOARD(sel) \
+		GETPROP("_SURF_URI", \
+				"echo \"$url\" | xclip -selection " sel " && " \
+				NOTIFY("low", "Nakopya na ang URL sa " sel "."), \
+				"surf-yank")
+
+#define PLAY_URL_AS_VIDEO \
+		GETPROP("_SURF_URI", \
+				NOTIFY("low", "Ipe-play ang video mula sa \"$url\"...") " & " \
+				"mpv --really-quiet \"$url\" && " \
+				NOTIFY("low", "Isinara ang video player.") " || " \
+				NOTIFY("critical", "Hindi mai-play ang video mula sa \"$url\"."), \
+				"surf-video")
+
+#define DOWNLOAD(u, r) { \
+		.v = (const char *[]){ "/bin/sh", "-c", \
+			NOTIFY("low", "Dina-download ang \"$4\"...") " && " \
+			"(curl -fgLJO --create-dirs --output-dir \"" OUTPUT_DIR "\" " \
+				"-A \"$1\" -b \"$2\" -c \"$2\" -e \"$3\" \"$4\" && " \
+				NOTIFY("low", "Natapos i-download ang \"$4\".") " || " \
+			NOTIFY("critical", "Hindi na-download ang \"$4\".") ") &", \
+			"surf-download", useragent, cookiefile, r, u, NULL \
+		} \
+}
+
+#define PLUMB(u) { \
         .v = (const char *[]){ "/bin/sh", "-c", \
              "xdg-open \"$0\"", u, NULL \
         } \
 }
 
-/* VIDEOPLAY(URI) */
-#define VIDEOPLAY(u) {\
-        .v = (const char *[]){ "/bin/sh", "-c", \
-             "mpv --really-quiet \"$0\"", u, NULL \
-        } \
+#define VIDEOPLAY(u) { \
+		.v = (const char *[]) { "/bin/sh", "-c", \
+			"mpv --really-quiet \"$0\"", u, NULL \
+		} \
 }
 
 /* styles */
@@ -138,8 +166,10 @@ static Key keys[] = {
 	{ MODKEY,                GDK_KEY_g,      spawn,      SETPROP("_SURF_URI", "_SURF_GO", PROMPT_GO) },
 	{ MODKEY,                GDK_KEY_f,      spawn,      SETPROP("_SURF_FIND", "_SURF_FIND", PROMPT_FIND) },
 	{ MODKEY,                GDK_KEY_slash,  spawn,      SETPROP("_SURF_FIND", "_SURF_FIND", PROMPT_FIND) },
+	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_c,      spawn,      YANK_URL_TO_CLIPBOARD("clipboard") },
+	
+	{ 0,                     GDK_KEY_F1,     spawn,      PLAY_URL_AS_VIDEO },
 
-	{ 0,                     GDK_KEY_Escape, stop,       { 0 } },
 	{ MODKEY,                GDK_KEY_c,      stop,       { 0 } },
 
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_r,      reload,     { .i = 1 } },
@@ -151,17 +181,12 @@ static Key keys[] = {
 	/* vertical and horizontal scrolling, in viewport percentage */
 	{ MODKEY,                GDK_KEY_j,      scrollv,    { .i = +10 } },
 	{ MODKEY,                GDK_KEY_k,      scrollv,    { .i = -10 } },
-	{ MODKEY,                GDK_KEY_space,  scrollv,    { .i = +50 } },
-	{ MODKEY,                GDK_KEY_b,      scrollv,    { .i = -50 } },
 	{ MODKEY,                GDK_KEY_i,      scrollh,    { .i = +10 } },
 	{ MODKEY,                GDK_KEY_u,      scrollh,    { .i = -10 } },
 
-
-	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_j,      zoom,       { .i = -1 } },
-	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_k,      zoom,       { .i = +1 } },
-	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_q,      zoom,       { .i = 0  } },
-	{ MODKEY,                GDK_KEY_minus,  zoom,       { .i = -1 } },
-	{ MODKEY,                GDK_KEY_plus,   zoom,       { .i = +1 } },
+	{ MODKEY,                GDK_KEY_bracketleft,  zoom,       { .i = -1 } },
+	{ MODKEY,                GDK_KEY_bracketright,   zoom,       { .i = +1 } },
+	{ MODKEY,                GDK_KEY_equal,  zoom,       { .i = 0  } },
 
 	{ MODKEY,                GDK_KEY_p,      clipboard,  { .i = 1 } },
 	{ MODKEY,                GDK_KEY_y,      clipboard,  { .i = 0 } },
@@ -174,14 +199,14 @@ static Key keys[] = {
 
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_a,      togglecookiepolicy, { 0 } },
 	{ 0,                     GDK_KEY_F11,    togglefullscreen, { 0 } },
-	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_o,      toggleinspector, { 0 } },
+	{ 0,                     GDK_KEY_F12,    toggleinspector, { 0 } },
 
-	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_c,      toggle,     { .i = CaretBrowsing } },
-	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_g,      toggle,     { .i = Geolocation } },
+	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_v,      toggle,     { .i = CaretBrowsing } },
+	//{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_g,      toggle,     { .i = Geolocation } },
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_s,      toggle,     { .i = JavaScript } },
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_i,      toggle,     { .i = LoadImages } },
-	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_b,      toggle,     { .i = ScrollBars } },
-	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_t,      toggle,     { .i = StrictTLS } },
+	//{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_b,      toggle,     { .i = ScrollBars } },
+	//{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_t,      toggle,     { .i = StrictTLS } },
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_m,      toggle,     { .i = Style } },
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_d,      toggle,     { .i = DarkMode } },
 };

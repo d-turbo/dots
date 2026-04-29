@@ -86,7 +86,7 @@ local keymaps = {
 
 		{ "<leader>hd", ":split<CR>" },
 		{ "<leader>hn", ":new<CR>" },
-		{ "<leader>hx", ":Explore<CR>" },
+		{ "<leader>hx", ":HExplore<CR>" },
 		{ "<leader>ht", ":split | terminal<CR>" },
 
 		{ "<leader>td", ":tab split<CR>" },
